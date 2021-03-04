@@ -3,9 +3,9 @@
 #AutoIt3Wrapper_Icon=icon.ico
 #AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Res_Description=PlayMusic
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.1
+#AutoIt3Wrapper_Res_Fileversion=1.0.0.2
 #AutoIt3Wrapper_Res_ProductName=Khieudeptrai
-#AutoIt3Wrapper_Res_ProductVersion=1.0.0.1
+#AutoIt3Wrapper_Res_ProductVersion=1.0.0.2
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright © Khieudeptrai
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
@@ -39,6 +39,8 @@ Global $DestinationMP3
 Global $MIM_DestinationMP3
 Global $Tidy_DestinationMP3
 
+Global $Volume
+Global $Volume_Default = 40
 Global $MIM_SourceMP3
 Global $MIM_Hour
 Global $MIM_Min
@@ -112,7 +114,7 @@ Func Main()
 					FileDelete($MIM_DestinationMP3)
 					$bCopied = FileCopy($MIM_SourceMP3 & "\" & @YEAR & "\" & @MON & "\" & @MDAY & "\*", $MIM_DestinationMP3)
 					If $bCopied = True Then
-					   MsgBox($MB_SYSTEMMODAL, "Notify", "MusicInMotion will start after few minutes with volume 60. Please turn on speaker. Thanks.", 10)
+					   MsgBox($MB_SYSTEMMODAL, "Notify", "MusicInMotion will start after few minutes. Please turn on speaker. Thanks.", 20)
 					EndIf
 				EndIf
 			EndIf
@@ -120,7 +122,7 @@ Func Main()
 			If $bDisplayNotify = False Then
 				If @MIN = $MIM_MinDownLoad + 9 Then
 					If $bCopied = True Then
-					   MsgBox($MB_SYSTEMMODAL, "Notify", "MusicInMotion will start after 1 minutes with volume 60. Please turn on speaker. Thanks.", 10)
+					   MsgBox($MB_SYSTEMMODAL, "Notify", "MusicInMotion will start after 1 minutes. Please turn on speaker. Thanks.", 20)
 					   $bDisplayNotify = True
 					Else
 					   MsgBox($MB_SYSTEMMODAL, "Notify", "MusicInMotion will not start because Autodownload Fail. Thanks.", 15)
@@ -154,7 +156,7 @@ Func Main()
 						FileDelete($Tidy_DestinationMP3)
 						$bCopied = FileCopy($Tidy_SourceMP3 & "\" & @YEAR & "\" & @MON & "\" & @MDAY & "\*", $Tidy_DestinationMP3)
 						If $bCopied = True Then
-						   MsgBox($MB_SYSTEMMODAL, "Notify", "Tidy-up will start after few minutes with volume 60. Please turn on speaker. Thanks.", 10)
+						   MsgBox($MB_SYSTEMMODAL, "Notify", "Tidy-up will start after few minutes. Please turn on speaker. Thanks.", 20)
 						EndIf
 					EndIf
 				EndIf
@@ -162,7 +164,7 @@ Func Main()
 				If $bDisplayNotify = False Then
 					If @MIN = $Tidy_MinDownLoad + 9 Then
 						If $bCopied = True Then
-						   MsgBox($MB_SYSTEMMODAL, "Notify", "Tidy-up will start after 1 minutes with volume 60. Please turn on speaker. Thanks.", 10)
+						   MsgBox($MB_SYSTEMMODAL, "Notify", "Tidy-up will start after 1 minutes. Please turn on speaker. Thanks.", 20)
 						   $bDisplayNotify = True
 						Else
 						   MsgBox($MB_SYSTEMMODAL, "Notify", "Tidy-up will not start because Autodownload Fail. Thanks.", 15)
@@ -174,7 +176,6 @@ Func Main()
 				Sleep(5000)
 
 			EndIf
-
 
 			If $Tidy_Hour = $Now_Hour Then
 				If $bCopied = True Then
@@ -201,12 +202,12 @@ Func PlayMusic(ByRef $Music)
 	For $i = 1 To 50 Step +1
 	   Send("{VOLUME_DOWN}")
 	Next
-	For $i = 1 To 30 Step +1
+	For $i = 1 To $Volume / 2 Step +1
 	   Send("{VOLUME_UP}")
 	   Sleep(50)
 	Next
 
-	SoundPlay($Music, 1)
+	SoundPlay($Music, 0)
 	Send("{RCTRL}")
 	For $i = 1 To 50 Step +1
 	   Send("{VOLUME_DOWN}")
@@ -241,7 +242,10 @@ Func CreateGUIConfig()
    Global $Tidy_inputSourceFolder = GUICtrlCreateInput ($Tidy_SourceMP3, 120, 80, 250, 20)
 
    GUICtrlCreateLabel ("Destination Folder", 10, 123)
-   Global $inputDestFolder = GUICtrlCreateInput ($DestinationMP3, 120, 120, 250, 20)
+   Global $inputDestFolder = GUICtrlCreateInput ($DestinationMP3, 120, 120, 220, 20)
+
+   GUICtrlCreateLabel ("Volume", 380, 123)
+   Global $inputVolume = GUICtrlCreateInput ($Volume, 430, 120, 30, 20)
 
    $ButtonOK = GuiCtrlCreateButton("OK", 100, 160, 80, 25)
    GUICtrlSetOnEvent(-1, "OnOK")
@@ -263,6 +267,7 @@ Func OnOK()
    $Tidy_SourceMP3 = GUICtrlRead($Tidy_inputSourceFolder)
 
    $DestinationMP3 = GUICtrlRead($inputDestFolder)
+   $Volume = Number(GUICtrlRead($inputVolume))
 
    $MIM_DestinationMP3 = $DestinationMP3 & "/MIM.mp3"
    $Tidy_DestinationMP3 = $DestinationMP3 & "/Tydi-up.mp3"
@@ -305,6 +310,7 @@ Func OnCancel()
    GUICtrlSetData($Tidy_inputSourceFolder, $Tidy_SourceMP3)
 
    GUICtrlSetData($inputDestFolder, $DestinationMP3)
+   GUICtrlSetData($inputVolume, $Volume)
 EndFunc
 
 Func CreateGUIAbout()
@@ -359,6 +365,8 @@ Func ReadIniFile()
 
    $DestinationMP3 = IniRead($IniFile, "Config", "Dest", $DestinationMP3Default)
 
+   $Volume = Number(IniRead($IniFile, "Config", "Volume", $Volume_Default))
+
    $MIM_DestinationMP3 = $DestinationMP3 & "/MIM.mp3"
    $Tidy_DestinationMP3 = $DestinationMP3 & "/Tydi-up.mp3"
 EndFunc
@@ -373,4 +381,5 @@ Func WriteIniFile()
    IniWrite($IniFile, "Config", "Tidy_Source", $Tidy_SourceMP3)
 
    IniWrite($IniFile, "Config", "Dest", $DestinationMP3)
+   IniWrite($IniFile, "Config", "Volume", $Volume)
 EndFunc
