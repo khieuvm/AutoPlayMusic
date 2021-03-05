@@ -207,13 +207,7 @@ Func PlayMusic(ByRef $Music)
 	   Sleep(50)
 	Next
 
-	SoundPlay($Music, 0)
-	Send("{RCTRL}")
-	For $i = 1 To 50 Step +1
-	   Send("{VOLUME_DOWN}")
-	Next
-
-	FileDelete($Music)
+	SoundPlay($Music)
 EndFunc
 
 Func CreateGUIConfig()
