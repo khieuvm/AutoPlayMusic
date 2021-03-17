@@ -3,12 +3,13 @@
 #AutoIt3Wrapper_Icon=icon.ico
 #AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Res_Description=PlayMusic
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.2
+#AutoIt3Wrapper_Res_Fileversion=1.0.0.3
 #AutoIt3Wrapper_Res_ProductName=Khieudeptrai
-#AutoIt3Wrapper_Res_ProductVersion=1.0.0.2
+#AutoIt3Wrapper_Res_ProductVersion=1.0.0.3
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright © Khieudeptrai
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
+#include <Sound.au3>
 #include <Misc.au3>
 #include <MsgBoxConstants.au3>
 #include <TrayConstants.au3>
@@ -76,18 +77,9 @@ Func Main()
 	TraySetToolTip("PlayMusic")
 	TraySetIcon("icon.ico")
 
-	; Check if the registry key is already existing, so as not to damage the user's system.
-	RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run", "PlayMusic")
-
 	Local $sfilePath = StringLeft(@AutoItExe, StringInStr(@AutoItExe, "\", 0, -1) - 1)
-	; @error is set to non-zero when reading a registry key that doesn't exist.
-	If @error Then
-		; Write a single REG_SZ value.
-		RegWrite("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run", "PlayMusic", "REG_SZ", $sfilePath)
-	Else
-		RegDelete("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run", "PlayMusic")
-		RegWrite("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run", "PlayMusic", "REG_SZ", $sfilePath)
-	EndIf
+
+	RegWrite("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run", "PlayMusic", "REG_SZ", $sfilePath)
 
 	$bCopied = False
 
@@ -199,6 +191,7 @@ EndFunc
 
 Func PlayMusic(ByRef $Music)
 	Send("{RCTRL}")
+	Sleep(1000)
 	For $i = 1 To 50 Step +1
 	   Send("{VOLUME_DOWN}")
 	Next
@@ -207,7 +200,19 @@ Func PlayMusic(ByRef $Music)
 	   Sleep(50)
 	Next
 
-	SoundPlay($Music)
+	Local $aMusic = _SoundOpen($Music)
+
+	_SoundPlay($aMusic)
+	Sleep(2000)
+	While 1
+		If StringCompare(_SoundStatus($aMusic), "stopped") = 0 Then ExitLoop
+		Sleep(2000)
+	WEnd
+
+	Send("{RCTRL}")
+	For $i = 1 To 50 Step +1
+	   Send("{VOLUME_DOWN}")
+	Next
 EndFunc
 
 Func CreateGUIConfig()
