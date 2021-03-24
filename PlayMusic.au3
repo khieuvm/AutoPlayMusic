@@ -3,9 +3,9 @@
 #AutoIt3Wrapper_Icon=icon.ico
 #AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Res_Description=PlayMusic
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.3
+#AutoIt3Wrapper_Res_Fileversion=1.0.0.4
 #AutoIt3Wrapper_Res_ProductName=Khieudeptrai
-#AutoIt3Wrapper_Res_ProductVersion=1.0.0.3
+#AutoIt3Wrapper_Res_ProductVersion=1.0.0.4
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright © Khieudeptrai
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
@@ -29,11 +29,11 @@ Global $GUI
 Global $AboutGUI
 Global $MIM_HourDefault = 15
 Global $MIM_MinDefault = 0
-Global $MIM_SourceMP3Default = "\\10.116.16.22\public1\RadioChannel\MusicInMotion"
+Global $MIM_SourceMP3Default = "\\10.116.16.22\public\RadioChannel\MusicInMotion"
 
 Global $Tidy_HourDefault = 10
 Global $Tidy_MinDefault = 0
-Global $Tidy_SourceMP3Default = "\\10.116.16.22\public1\RadioChannel\Tidy-up"
+Global $Tidy_SourceMP3Default = "\\10.116.16.22\public\RadioChannel\Tidy-up"
 
 Global $DestinationMP3Default = "D:\"
 Global $DestinationMP3
