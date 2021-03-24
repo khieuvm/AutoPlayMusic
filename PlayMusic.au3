@@ -191,7 +191,7 @@ EndFunc
 
 Func PlayMusic(ByRef $Music)
 	Send("{RCTRL}")
-	Sleep(1000)
+	Sleep(2000)
 	For $i = 1 To 50 Step +1
 	   Send("{VOLUME_DOWN}")
 	Next
@@ -201,12 +201,13 @@ Func PlayMusic(ByRef $Music)
 	Next
 
 	Local $aMusic = _SoundOpen($Music)
+	Sleep(1000)
 
 	_SoundPlay($aMusic)
-	Sleep(2000)
+	Sleep(5000)
 	While 1
 		If StringCompare(_SoundStatus($aMusic), "stopped") = 0 Then ExitLoop
-		Sleep(2000)
+		Sleep(5000)
 	WEnd
 
 	Send("{RCTRL}")
