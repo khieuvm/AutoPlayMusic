@@ -3,9 +3,9 @@
 #AutoIt3Wrapper_Icon=icon.ico
 #AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Res_Description=PlayMusic
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.4
+#AutoIt3Wrapper_Res_Fileversion=1.0.0.5
 #AutoIt3Wrapper_Res_ProductName=Khieudeptrai
-#AutoIt3Wrapper_Res_ProductVersion=1.0.0.4
+#AutoIt3Wrapper_Res_ProductVersion=1.0.0.5
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright © Khieudeptrai
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
@@ -77,7 +77,8 @@ Func Main()
 	TraySetToolTip("PlayMusic")
 	TraySetIcon("icon.ico")
 
-	Local $sfilePath = StringLeft(@AutoItExe, StringInStr(@AutoItExe, "\", 0, -1) - 1)
+	Local $sfilePath
+	$sfilePath = @ScriptDir & "\" & @ScriptName
 
 	RegWrite("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run", "PlayMusic", "REG_SZ", $sfilePath)
 
@@ -270,7 +271,7 @@ Func OnOK()
    $Volume = Number(GUICtrlRead($inputVolume))
 
    $MIM_DestinationMP3 = $DestinationMP3 & "/MIM.mp3"
-   $Tidy_DestinationMP3 = $DestinationMP3 & "/Tydi-up.mp3"
+   $Tidy_DestinationMP3 = $DestinationMP3 & "/Tidy-up.mp3"
 
    GUISetState(@SW_HIDE, $GUI)
    WriteIniFile()
