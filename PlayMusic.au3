@@ -3,9 +3,10 @@
 #AutoIt3Wrapper_Icon=icon.ico
 #AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Res_Description=PlayMusic
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.5
+#AutoIt3Wrapper_Res_Fileversion=1.0.0.6
 #AutoIt3Wrapper_Res_ProductName=Khieudeptrai
-#AutoIt3Wrapper_Res_ProductVersion=1.0.0.5
+#AutoIt3Wrapper_Res_ProductVersion=1.0.0.6
+#AutoIt3Wrapper_Res_CompanyName=Khieudeptrai
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright © Khieudeptrai
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
@@ -40,8 +41,8 @@ Global $DestinationMP3
 Global $MIM_DestinationMP3
 Global $Tidy_DestinationMP3
 
-Global $Volume
-Global $Volume_Default = 40
+Global $Volume = 50
+Global $Volume_Default = 50
 Global $MIM_SourceMP3
 Global $MIM_Hour
 Global $MIM_Min
@@ -53,8 +54,6 @@ Global $Tidy_Hour
 Global $Tidy_Min
 Global $Tidy_HourDownload
 Global $Tidy_MinDownLoad
-
-Global $bCopied
 
 ReadIniFile()
 CreateGUIConfig()
@@ -82,19 +81,14 @@ Func Main()
 
 	RegWrite("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run", "PlayMusic", "REG_SZ", $sfilePath)
 
-	$bCopied = False
-
 	$MIM_HourDownload = $MIM_Hour
 	$MIM_MinDownLoad = $MIM_Min
 
 	$Tidy_HourDownload = $Tidy_Hour
 	$Tidy_MinDownLoad = $Tidy_Min
 
-	For $i = 1 To 50 Step +1
-	   Send("{VOLUME_DOWN}")
-	Next
-
 	SetTime()
+	Local $bCopied = False
 	Local $bDisplayNotify = False
 
 	While 1
@@ -192,14 +186,16 @@ EndFunc
 
 Func PlayMusic(ByRef $Music)
 	Send("{RCTRL}")
-	Sleep(2000)
+	Sleep(1000)
 	For $i = 1 To 50 Step +1
 	   Send("{VOLUME_DOWN}")
 	Next
+	Sleep(200)
 	For $i = 1 To $Volume / 2 Step +1
 	   Send("{VOLUME_UP}")
 	   Sleep(50)
 	Next
+	Sleep(100)
 
 	Local $aMusic = _SoundOpen($Music)
 	Sleep(1000)
@@ -323,7 +319,7 @@ Func CreateGUIAbout()
 	GUICtrlSetResizing(-1,$GUI_DOCKTOP+$GUI_DOCKLEFT+$GUI_DOCKRIGHT+$GUI_DOCKBOTTOM)
 	GUICtrlSetFont(-1, 20, 500, 0, "Cambria")
 
-	GUICtrlCreateLabel ("Version 1.0.0.1", 109, 50, 250, 30)
+	GUICtrlCreateLabel ("Version 1.0.0.6", 109, 50, 250, 30)
 	GUICtrlSetResizing(-1,$GUI_DOCKTOP+$GUI_DOCKLEFT+$GUI_DOCKRIGHT+$GUI_DOCKBOTTOM)
 	GUICtrlSetFont(-1, 10, 200, 0, "Cambria")
 
